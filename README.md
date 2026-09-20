@@ -35,6 +35,23 @@ chat completion to make the routing decision.
 - **Auditable decisions.** Inspect the complete state, question, and opaque
   choice mapping before sending anything.
 
+## Small result
+
+On a 191-query complete-case slice of
+[LLMRouterBench](https://github.com/ynulihao/LLMRouterBench), adding K=4
+retrieved observations per candidate improved ReflexRoute's mean quality from
+`0.5497` to `0.6832` (+24.3% relative). Routing remained inexpensive:
+
+| Mode | Mean quality | Router latency P50 | Router cost / 1,000 decisions |
+| --- | ---: | ---: | ---: |
+| Zero-shot | 0.5497 | 722 ms | $0.108 |
+| Few-shot, K=4 | 0.6832 | 1,333 ms | $0.403 |
+
+This is a small exploratory measurement of ReflexRoute's two modes, not a
+comparison against other routers. Candidate outputs were cached, so the run
+only paid `$0.09757` for 382 Jev decisions. See the
+[setup, cost definition, caveats, and reproduction command](benchmarks/README.md).
+
 ## Install
 
 ReflexRoute requires Python 3.10 or newer.
@@ -58,6 +75,19 @@ Set your OpenRouter API key:
 ```bash
 export OPENROUTER_API_KEY="your-key"
 ```
+
+## 60-second demo
+
+The demo routes one query twice: first from built-in priors, then after adding
+eight illustrative user observations.
+
+```bash
+python examples/adaptation_demo.py
+```
+
+It prints the selected model, distribution, confidence, routing latency, and
+the Jev charge for each decision. It makes two Decisions API calls but does not
+invoke either selected model.
 
 ## Quick start
 
