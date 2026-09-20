@@ -76,18 +76,22 @@ Set your OpenRouter API key:
 export OPENROUTER_API_KEY="your-key"
 ```
 
-## 60-second demo
+## Visual Playground
 
-The demo routes one query twice: first from built-in priors, then after adding
-eight illustrative user observations.
+Launch the dependency-free local interface:
 
 ```bash
-python examples/adaptation_demo.py
+python demo/app.py
 ```
 
-It prints the selected model, distribution, confidence, routing latency, and
-the Jev charge for each decision. It makes two Decisions API calls but does not
-invoke either selected model.
+Open `http://127.0.0.1:7860`. Without an API key, the Playground replays a
+recorded adaptation where user evidence changes the selected model. With
+`OPENROUTER_API_KEY` set, it can run live zero-shot, few-shot, or side-by-side
+decisions. The key stays in the local Python process, and candidate models are
+never invoked.
+
+Prefer the terminal? `python examples/adaptation_demo.py` runs the same
+two-decision story and prints its probabilities, latency, and Jev charge.
 
 ## Quick start
 

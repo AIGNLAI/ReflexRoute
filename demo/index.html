@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Visualize zero-shot and few-shot ReflexRoute decisions.">
+    <title>ReflexRoute Playground</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <main class="shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="ReflexRoute Playground home">
+          <span class="brand-mark" aria-hidden="true">R</span>
+          <span>
+            <strong>ReflexRoute</strong>
+            <small>Playground</small>
+          </span>
+        </a>
+        <div class="status-pill" id="liveStatus">
+          <span class="status-dot"></span>
+          <span>Checking server</span>
+        </div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <p class="eyebrow">ROUTE ON PRIORS · ADAPT WITH EXAMPLES</p>
+          <h1>Watch the route <span>change.</span></h1>
+          <p class="hero-copy">
+            Compare a cold-start decision with the same router after it sees a
+            handful of your outcomes. No training, embeddings, or model call.
+          </p>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">130</span>
+          <span class="hero-stat-label">built-in model priors</span>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel controls-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="step">01</span>
+              <h2>Decision input</h2>
+            </div>
+            <span class="micro-label">ONE CHOICE</span>
+          </div>
+
+          <label for="queryInput">Target query</label>
+          <textarea id="queryInput" rows="6" maxlength="12000"></textarea>
+          <div class="query-meta">
+            <span id="charCount">0 characters</span>
+            <button class="text-button" id="resetQuery" type="button">Reset example</button>
+          </div>
+
+          <div class="mode-label">Decision mode</div>
+          <div class="mode-switch" role="group" aria-label="Decision mode">
+            <button class="mode-button active" data-mode="zero-shot" type="button">
+              <span>Zero-shot</span>
+              <small>Built-in priors</small>
+            </button>
+            <button class="mode-button" data-mode="few-shot" type="button">
+              <span>Few-shot</span>
+              <small>Priors + history</small>
+            </button>
+          </div>
+
+          <div class="action-stack">
+            <button class="primary-button" id="routeButton" type="button">
+              <span>Route live</span>
+              <span aria-hidden="true">→</span>
+            </button>
+            <button class="secondary-button" id="compareButton" type="button">
+              Compare both modes
+            </button>
+            <button class="ghost-button" id="replayButton" type="button">
+              Replay recorded demo
+            </button>
+          </div>
+
+          <div class="privacy-note">
+            <span aria-hidden="true">◆</span>
+            <p>The API key stays server-side. Candidate models are not invoked.</p>
+          </div>
+        </aside>
+
+        <section class="panel decision-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="step">02</span>
+              <h2>Routing decision</h2>
+            </div>
+            <span class="run-kind" id="runKind">RECORDED</span>
+          </div>
+
+          <div class="notice hidden" id="notice" role="alert"></div>
+          <div class="result-grid" id="resultGrid"></div>
+
+          <div class="empty-state" id="emptyState">
+            <div class="empty-orbit"><span>R</span></div>
+            <h3>Ready to route</h3>
+            <p>Run a live decision or replay the recorded adaptation.</p>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel candidates-section">
+        <div class="panel-heading">
+          <div>
+            <span class="step">03</span>
+            <h2>Candidate pool</h2>
+          </div>
+          <span class="micro-label" id="candidateCount">4 MODELS</span>
+        </div>
+        <div class="candidate-grid" id="candidateGrid"></div>
+      </section>
+
+      <section class="lower-grid">
+        <section class="panel evidence-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="step">04</span>
+              <h2>Retrieved evidence</h2>
+            </div>
+            <span class="micro-label" id="evidenceLabel">FEW-SHOT ONLY</span>
+          </div>
+          <div id="evidenceList" class="evidence-list">
+            <p class="muted-copy">Zero-shot decisions use model priors only.</p>
+          </div>
+        </section>
+
+        <section class="panel benchmark-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="step">05</span>
+              <h2>Small result</h2>
+            </div>
+            <span class="micro-label" id="benchmarkCount">191 QUERIES</span>
+          </div>
+          <p class="benchmark-intro">Mean quality on a complete-case LLMRouterBench slice.</p>
+          <div class="benchmark-bars" id="benchmarkBars"></div>
+          <div class="benchmark-footnote">
+            <span>Router cost / 1k</span>
+            <strong id="benchmarkCost">—</strong>
+          </div>
+        </section>
+      </section>
+
+      <footer>
+        <span>ReflexRoute</span>
+        <span>Structured decisions powered by Jev</span>
+      </footer>
+    </main>
+
+    <template id="resultTemplate">
+      <article class="result-card">
+        <div class="result-card-top">
+          <div>
+            <span class="result-mode"></span>
+            <h3 class="selected-model"></h3>
+          </div>
+          <div class="confidence-ring">
+            <span class="confidence-value"></span>
+            <small>confidence</small>
+          </div>
+        </div>
+        <div class="probability-list"></div>
+        <div class="metric-row">
+          <div><span>Latency</span><strong class="latency-value"></strong></div>
+          <div><span>Route cost</span><strong class="cost-value"></strong></div>
+          <div><span>Evidence</span><strong class="evidence-value"></strong></div>
+        </div>
+      </article>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
