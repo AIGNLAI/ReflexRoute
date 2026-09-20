@@ -1,0 +1,45 @@
+# These profiles are deliberately compact, fallible priors. Replace or extend
+# them for your deployment; user history takes precedence in the Jev prompt.
+profile_version: "0.1.0"
+source: "ReflexRoute maintainers; illustrative priors, not benchmark guarantees"
+
+models:
+  openai/gpt-5.6:
+    description: "Strong general reasoning, coding, and complex instruction-following model."
+    strengths:
+      - reasoning
+      - coding
+      - complex instruction following
+    cost_level: high
+    latency_level: medium
+    estimated_cost: 0.030
+
+  google/gemini-flash:
+    description: "Fast and inexpensive general-purpose model for straightforward tasks."
+    strengths:
+      - simple QA
+      - summarization
+      - fast responses
+    cost_level: low
+    latency_level: low
+    estimated_cost: 0.003
+
+  anthropic/claude-sonnet:
+    description: "Balanced model for careful writing, analysis, and software engineering."
+    strengths:
+      - writing
+      - analysis
+      - coding
+    cost_level: medium
+    latency_level: medium
+    estimated_cost: 0.015
+
+  meta-llama/llama-3.3-70b-instruct:
+    description: "Open-weight general instruction model with broad language capabilities."
+    strengths:
+      - general QA
+      - multilingual tasks
+      - instruction following
+    cost_level: low
+    latency_level: medium
+    estimated_cost: 0.006

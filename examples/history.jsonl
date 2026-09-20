@@ -1,0 +1,6 @@
+{"query":"Implement a distributed rate limiter with Redis and discuss failure modes.","model":"openai/gpt-5.6","performance":0.97,"cost":0.028,"latency":2.31}
+{"query":"Debug a concurrent Python worker pool with intermittent deadlocks.","model":"openai/gpt-5.6","performance":0.95,"cost":0.027,"latency":2.08}
+{"query":"Summarize this customer support email in three bullets.","model":"google/gemini-flash","performance":0.94,"cost":0.002,"latency":0.42}
+{"query":"Classify a short product review by sentiment.","model":"google/gemini-flash","performance":0.92,"cost":0.001,"latency":0.31}
+{"query":"Rewrite a sensitive policy memo with a clear and diplomatic tone.","model":"anthropic/claude-sonnet","performance":0.96,"cost":0.014,"latency":1.67}
+{"query":"Review this TypeScript API design and suggest maintainable abstractions.","model":"anthropic/claude-sonnet","performance":0.93,"cost":0.015,"latency":1.75}
