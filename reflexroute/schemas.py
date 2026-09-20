@@ -86,6 +86,7 @@ class ModelProfile:
     estimated_cost: float | None = None
     profile_version: str | None = None
     source: Any = None
+    default_candidate: bool = False
     extra: Mapping[str, Any] = field(default_factory=dict)
 
     def to_context(self) -> dict[str, Any]:

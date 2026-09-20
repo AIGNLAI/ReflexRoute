@@ -26,6 +26,11 @@ pytest
 Do not commit API keys, routing histories containing private prompts, generated
 build artifacts, or model-profile claims without a traceable source.
 
+For catalog changes, follow
+[`docs/MODEL_PROFILES.md`](docs/MODEL_PROFILES.md). Profile updates must include
+the snapshot provenance, a deterministic regeneration check, and tests for the
+new catalog invariants.
+
 ## Design principles
 
 - Keep routing training-free and simple to adopt.

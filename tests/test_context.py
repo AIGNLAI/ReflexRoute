@@ -5,7 +5,7 @@ from reflexroute.profiles import load_profiles
 
 def test_context_has_priors_balanced_evidence_and_one_choice():
     profiles = load_profiles()
-    models = ["openai/gpt-5.6", "google/gemini-flash"]
+    models = ["openai/gpt-5.6-sol", "google/gemini-3.8-flash"]
     history = [
         HistoryRecord("write concurrent code", models[0], 0.9),
         HistoryRecord("write simple code", models[0], 0.7),
@@ -23,7 +23,8 @@ def test_context_has_priors_balanced_evidence_and_one_choice():
     candidates = state["candidate_models"]
     assert len(candidates[models[0]]["historical_evidence"]) == 1
     assert len(candidates[models[1]]["historical_evidence"]) == 1
-    assert candidates[models[0]]["prior"]["profile_version"] == "0.1.0"
+    assert candidates[models[0]]["prior"]["profile_version"] == "2026-09-20.1"
+    assert candidates[models[0]]["prior"]["context_length"] == 1_050_000
 
 
 def test_unknown_model_gets_honest_fallback_prior():

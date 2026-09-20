@@ -18,10 +18,10 @@ class FakeClient:
 def test_zero_shot_route_builds_structured_decision():
     client = FakeClient()
     router = Router(
-        ["openai/gpt-5.6", "google/gemini-flash"], client=client
+        ["openai/gpt-5.6-sol", "google/gemini-3.8-flash"], client=client
     )
     result = router.route("Implement a rate limiter")
-    assert result.model == "openai/gpt-5.6"
+    assert result.model == "openai/gpt-5.6-sol"
     state, question, choice_map = client.calls[0]
     assert "messages" not in state
     assert set(state["candidate_models"]) == set(router.models)
@@ -32,18 +32,18 @@ def test_zero_shot_route_builds_structured_decision():
 def test_budget_filters_before_api_and_single_candidate_short_circuits():
     client = FakeClient()
     router = Router(
-        ["openai/gpt-5.6", "google/gemini-flash"], client=client
+        ["openai/gpt-5.6-sol", "google/gemini-3.8-flash"], client=client
     )
     result = router.route("Summarize", budget=0.01)
-    assert result.model == "google/gemini-flash"
-    assert result.probabilities == {"google/gemini-flash": 1.0}
+    assert result.model == "google/gemini-3.8-flash"
+    assert result.probabilities == {"google/gemini-3.8-flash": 1.0}
     assert result.usage["local_short_circuit"] is True
     assert client.calls == []
 
 
 def test_impossible_budget_and_unknown_cost_raise():
     with pytest.raises(BudgetError, match="No candidate"):
-        Router(["openai/gpt-5.6"]).route("query", budget=0.001)
+        Router(["openai/gpt-5.6-sol"]).route("query", budget=0.001)
     with pytest.raises(BudgetError, match="unknown/private"):
         Router(["unknown/private"]).route("query", budget=10)
 
@@ -82,13 +82,13 @@ def test_invalid_history_has_line_context(tmp_path):
 
 def test_build_decision_applies_budget_to_choice_map():
     router = Router([
-        "openai/gpt-5.6",
-        "google/gemini-flash",
+        "openai/gpt-5.6-sol",
+        "google/gemini-3.8-flash",
         "meta-llama/llama-3.3-70b-instruct",
     ])
     state, _, choice_map = router.build_decision("query", budget=0.01)
     assert set(choice_map.values()) == {
-        "google/gemini-flash",
+        "google/gemini-3.8-flash",
         "meta-llama/llama-3.3-70b-instruct",
     }
     assert set(state["candidate_models"]) == set(choice_map.values())
