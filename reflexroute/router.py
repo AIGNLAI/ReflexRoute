@@ -34,7 +34,13 @@ class Router:
         client: JevClient | None = None,
     ) -> None:
         self.profiles = load_profiles(profile_path)
-        selected = list(self.profiles) if models is None else _validate_models(models)
+        selected = (
+            [name for name, profile in self.profiles.items() if profile.default_candidate]
+            if models is None
+            else _validate_models(models)
+        )
+        if models is None and not selected:
+            selected = list(self.profiles)
         if not selected:
             raise ConfigurationError("At least one candidate model is required.")
         self.models = tuple(selected)

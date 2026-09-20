@@ -6,9 +6,9 @@ from reflexroute import Router
 
 
 models = [
-    "openai/gpt-5.6",
-    "google/gemini-flash",
-    "anthropic/claude-sonnet",
+    "openai/gpt-5.6-sol",
+    "google/gemini-3.8-flash",
+    "anthropic/claude-sonnet-5",
 ]
 
 # Zero-shot: built-in, explicitly versioned priors only.

@@ -68,9 +68,9 @@ from reflexroute import Router
 
 router = Router(
     models=[
-        "openai/gpt-5.6",
-        "google/gemini-flash",
-        "anthropic/claude-sonnet",
+        "openai/gpt-5.6-sol",
+        "google/gemini-3.8-flash",
+        "anthropic/claude-sonnet-5",
     ]
 )
 
@@ -91,7 +91,7 @@ result = router.route("Implement a distributed rate limiter.")
 History can be JSONL or CSV. Its canonical shape is:
 
 ```json
-{"query":"Solve this math problem...","model":"openai/gpt-5.6","performance":1.0,"cost":0.018,"latency":1.42}
+{"query":"Solve this math problem...","model":"openai/gpt-5.6-sol","performance":1.0,"cost":0.014,"latency":1.42}
 ```
 
 `query`, `model`, and numeric `performance` are required. `cost` and `latency`
@@ -125,8 +125,10 @@ is never asked to perform budget arithmetic.
 - If nothing remains, ReflexRoute raises `BudgetError`.
 - If one candidate remains, ReflexRoute returns it locally without an API call.
 
-Bundled costs are illustrative. Production deployments should maintain a
-profile file with estimates appropriate to their workloads.
+`estimated_cost` is reproducibly calculated from the catalog's token prices
+using a reference request of 2,000 input and 1,000 output tokens. It excludes
+cache, images, audio, web search, and provider-specific fees. Production
+deployments should maintain estimates appropriate to their real workloads.
 
 ## CLI
 
@@ -134,7 +136,7 @@ profile file with estimates appropriate to their workloads.
 reflexroute route "Write a CUDA kernel"
 
 reflexroute route \
-  --models openai/gpt-5.6 google/gemini-flash \
+  --models openai/gpt-5.6-sol google/gemini-3.8-flash \
   "Write a CUDA kernel"
 
 reflexroute route \
@@ -149,11 +151,11 @@ limit. Quote multi-word queries.
 Typical output:
 
 ```text
-Selected: openai/gpt-5.6
+Selected: openai/gpt-5.6-sol
 
-openai/gpt-5.6       0.67
-google/gemini-flash  0.21
-model-c              0.12
+openai/gpt-5.6-sol       0.67
+google/gemini-3.8-flash  0.21
+model-c                  0.12
 
 Confidence: 0.74
 ```
@@ -174,7 +176,7 @@ Jev receives structured state rather than a chat prompt:
   "target_query": "...",
   "candidate_models": {
     "model-a": {
-      "prior": {"description": "...", "profile_version": "0.1.0"},
+      "prior": {"description": "...", "profile_version": "2026-09-20.1"},
       "historical_evidence": []
     }
   }
@@ -188,9 +190,34 @@ rather than invented strengths.
 
 ## Model profiles
 
+ReflexRoute includes **130 model profiles across 23 OpenRouter providers** as
+of 2026-09-20. The catalog includes OpenAI, Anthropic, Google, Qwen, DeepSeek,
+Mistral, Z.ai, Meta, xAI, Moonshot, MiniMax, Amazon, NVIDIA, Perplexity,
+Cohere, ByteDance, and selected specialists.
+
 Bundled profiles live in
-[`reflexroute/profiles/models.yaml`](reflexroute/profiles/models.yaml). Supply a
-deployment-specific file with `Router(profile_path="my-models.yaml")`:
+[`reflexroute/profiles/models.yaml`](reflexroute/profiles/models.yaml). Each one
+records:
+
+- A concise routing description and conservative strength tags.
+- Context length and input/output modalities.
+- Tool use, structured output, and reasoning support.
+- Prompt and completion price per million tokens at snapshot time.
+- Reproducible reference-request cost plus heuristic cost/latency tiers.
+- Snapshot version and official source provenance.
+
+`Router()` uses a bounded 14-model cross-provider default shortlist so that a
+cold-start request does not become a 130-way Jev decision. Every bundled model
+remains available when explicitly named:
+
+```python
+router = Router(models=["openai/gpt-6-astra", "deepseek/deepseek-v4.1-flash"])
+```
+
+See [Model profile methodology](docs/MODEL_PROFILES.md) for provider coverage,
+field provenance, heuristics, and update instructions.
+
+Supply a deployment-specific file with `Router(profile_path="my-models.yaml")`:
 
 ```yaml
 profile_version: "2026-09-20"
@@ -214,7 +241,7 @@ context, making profiles traceable and extensible.
 
 | API | Purpose |
 | --- | --- |
-| `Router(models, history_top_k=4)` | Create a router; omit `models` to use every bundled profile. |
+| `Router(models, history_top_k=4)` | Create a router; omit `models` to use the bounded default shortlist. |
 | `router.load_history(path)` | Replace history from a JSONL or CSV file. |
 | `router.set_history(records)` | Replace history from Python objects. |
 | `router.eligible_models(budget)` | Inspect the result of hard budget filtering. |

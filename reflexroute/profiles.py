@@ -52,6 +52,7 @@ def load_profiles(path: str | Path | None = None) -> dict[str, ModelProfile]:
             "estimated_cost_per_request",
             "profile_version",
             "source",
+            "default_candidate",
         }
         result[name] = ModelProfile(
             model=name,
@@ -62,6 +63,7 @@ def load_profiles(path: str | Path | None = None) -> dict[str, ModelProfile]:
             estimated_cost=estimated_cost,
             profile_version=_optional_string(raw_profile.get("profile_version", version)),
             source=raw_profile.get("source", source),
+            default_candidate=raw_profile.get("default_candidate") is True,
             extra={key: value for key, value in raw_profile.items() if key not in known},
         )
     return result

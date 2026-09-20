@@ -6,6 +6,20 @@ project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Expanded built-in priors to 130 current OpenRouter models across 23 providers.
+- Added reproducible profile generation from an official Models API snapshot.
+- Added profile provenance, modalities, context length, feature support, and
+  token-price metadata.
+
+### Changed
+
+- Default routing now uses a bounded 14-model cross-provider shortlist instead
+  of every bundled profile.
+- Hard-budget estimates now use a documented 2,000-input/1,000-output token
+  reference request.
+
 ## [0.1.0] - 2026-09-20
 
 ### Added
