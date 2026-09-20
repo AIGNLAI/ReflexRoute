@@ -30,6 +30,7 @@ Changelog = "https://github.com/AIGNLAI/ReflexRoute/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = ["pytest>=7.0"]
+benchmark = ["pandas>=2.0"]
 
 [project.scripts]
 reflexroute = "reflexroute.cli:main"

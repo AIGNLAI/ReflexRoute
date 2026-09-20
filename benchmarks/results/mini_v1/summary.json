@@ -1,0 +1,66 @@
+{
+  "benchmark": "LLMRouterBench mini",
+  "context_size": 256,
+  "errors": [],
+  "history_records": 1024,
+  "history_top_k": 4,
+  "methods": {
+    "reflexroute_few_shot_k4": {
+      "n": 191,
+      "quality_mean": 0.6832460732984293,
+      "router_cost_coverage": 1.0,
+      "router_cost_per_1000_usd": 0.4032351832460733,
+      "router_cost_total_usd": 0.07701792,
+      "router_latency_p50_ms": 1333.2483787089586,
+      "router_latency_p95_ms": 2033.195577096194,
+      "selected_model_cost_mean_usd": 0.018111016335078535,
+      "selected_model_cost_per_1000_usd": 18.111016335078535,
+      "selections": {
+        "deepseek/deepseek-r1-0528": 61,
+        "google/gemini-2.5-flash": 98,
+        "google/gemini-2.5-pro": 27,
+        "meta-llama/llama-3.1-8b-instruct": 5
+      },
+      "total_cost_per_1000_usd": 18.514251518324606
+    },
+    "reflexroute_zero_shot": {
+      "n": 191,
+      "quality_mean": 0.5497382198952879,
+      "router_cost_coverage": 1.0,
+      "router_cost_per_1000_usd": 0.10759806282722509,
+      "router_cost_total_usd": 0.020551229999999993,
+      "router_latency_p50_ms": 721.7784440144897,
+      "router_latency_p95_ms": 1376.4288143720478,
+      "selected_model_cost_mean_usd": 0.011785609816753922,
+      "selected_model_cost_per_1000_usd": 11.785609816753922,
+      "selections": {
+        "deepseek/deepseek-r1-0528": 80,
+        "google/gemini-2.5-flash": 58,
+        "google/gemini-2.5-pro": 2,
+        "meta-llama/llama-3.1-8b-instruct": 51
+      },
+      "total_cost_per_1000_usd": 11.893207879581148
+    }
+  },
+  "models": [
+    {
+      "dataset_index": 6,
+      "openrouter_id": "meta-llama/llama-3.1-8b-instruct"
+    },
+    {
+      "dataset_index": 18,
+      "openrouter_id": "deepseek/deepseek-r1-0528"
+    },
+    {
+      "dataset_index": 21,
+      "openrouter_id": "google/gemini-2.5-flash"
+    },
+    {
+      "dataset_index": 22,
+      "openrouter_id": "google/gemini-2.5-pro"
+    }
+  ],
+  "run_date": "2026-09-20",
+  "seed": 20260920,
+  "target_count": 191
+}
